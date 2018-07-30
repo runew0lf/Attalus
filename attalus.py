@@ -35,7 +35,8 @@ def set_wallpaper(imagePath):
     :returns false if the image is <1024
     """
     dirpath = os.path.dirname(__file__)
-    full_path = os.path.join(dirpath, imagePath)
+    full_path = os.path.abspath(os.path.join(dirpath, imagePath))
+    print((full_path))
     if resize_image(full_path, screensize) == False:
         return False
     SPI_SETDESKWALLPAPER = 20
@@ -50,7 +51,7 @@ def download_wallpaper(url: str):
     """
     r = requests.get(url, allow_redirects=True)
     filename = url[url.rfind("/") + 1:]
-    filename = f"{default_dir}\\{filename}"
+    filename = f"{default_dir}\{filename}"
     if(os.path.exists(filename)):
         print(f"{filename} already exists")
         return False

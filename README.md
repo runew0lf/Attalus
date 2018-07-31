@@ -7,6 +7,6 @@ You will need to register for an IMGUR-API key here [https://api.imgur.com/oauth
 **Installation Instructions:**
 
 > * `pip install -r requirements.txt`
-> * Sent an environment variable named: `IMGUR_ID=<imgur api key>` 
+> * Set an environment variable named: `IMGUR_ID=<imgur api key>` 
  
  

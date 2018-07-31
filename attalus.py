@@ -71,12 +71,13 @@ def get_reddit(subreddit: str):
 
     new_images = []
     valid_images = ['.png', '.jpg']
-    r = requests.get(f'https://www.reddit.com/r/{subreddit}/new/.json', headers=headers)
+    r = requests.get(f'https://www.reddit.com/r/{subreddit}/new/.json?limit=100', headers=headers)
     data = r.json()
     for item in data['data']['children']:
         for extension in valid_images:
             if extension in item['data']['url']:
-                new_images.append(item['data']['url'])
+                if item['data']['ups'] > 1:
+                    new_images.append(item['data']['url'])
     return random.choice(new_images)
 
 def get_imgur(tags: str):
@@ -98,41 +99,6 @@ def get_imgur(tags: str):
             if album['width'] > album['height']:
                 new_images.append(album['link'])
     return random.choice(new_images)
-
-
-def get_flickr():
-    """
-    Grabs wallpaper from flickr
-    :return:
-    """
-    while True:
-        url = "http://flickr.com/explore"
-        response = requests.get(url).text
-
-        startText = '{"_flickrModelRegistry":"photo-lite-models","pathAlias":"'
-        pictureStartIndexs = []
-        index = 0
-        while index < len(response) - 1:  # not the last one though
-            index = response.find(startText, index)
-            if index == -1:
-                break
-            pictureStartIndexs.append(index + len(startText))
-            index += 1
-        goodies = response[random.choice(pictureStartIndexs):-1].partition(startText)[0]
-
-        author = goodies.partition('"')[0]
-
-        temp = goodies.partition('"id":"')[2]
-        ID = temp.partition('"}')[0]
-        # STEP 1 COMPLETE!
-
-        url = "https://www.flickr.com/photos/" + author + "/" + ID + "/sizes/h/"
-        response = requests.get(url)
-        goodies = response.text.partition('Download the')[0].partition('<dt>Download</dt>')[2]
-
-        url = goodies.partition('href="')[2].partition('">')[0]
-        if url.find("http") != -1:  # Non-downloadable images will never have full URLs
-            return url
 
 
 while True:
